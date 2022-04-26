@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:abertura_conta_duas_telas/page/Info.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,18 +17,37 @@ class _HomeState extends State<Home> {
   double valorLimite = 0;
   bool valorSwitch = false;
   String brasileiro = '';
-  String nome = '';
-  String idade = '';
 
   TextEditingController nomeController = TextEditingController();
   TextEditingController idadeController = TextEditingController();
 
-  String infoResultado = "Informações";
+  String infoResultado = "Verificar";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _titulo(),
+      backgroundColor: Colors.white,
+      body: _corpo(context),
+    );
+  }
+
+  _open(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return Info(
+          name: nomeController.text,
+          age: idadeController.text,
+          sex: dropdownValor,
+          school: dropdownValorEscola,
+          slider: valorSlider,
+          brasilian: valorSwitch);
+    }));
+  }
 
   void _gerarInfo() {
     setState(() {
-      nome = nomeController.text;
-      idade = idadeController.text;
+      String nome = nomeController.text;
+      String idade = idadeController.text;
       holderSexo = dropdownValor;
       holderEscola = dropdownValorEscola;
       valorLimite = valorSlider;
@@ -39,15 +59,6 @@ class _HomeState extends State<Home> {
       infoResultado =
           'Dados Informados: \n Nome: $nome \n Idade: $idade \n Sexo: $holderSexo \n Escolaridade: $holderEscola \n Limite: $valorLimite \n $brasileiro';
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _titulo(),
-      backgroundColor: Colors.white,
-      body: _corpo(context),
-    );
   }
 
   _titulo() {
@@ -70,7 +81,7 @@ class _HomeState extends State<Home> {
           _dropdownEscolaridade(),
           _slider(),
           _switch(),
-          _botao(context, "Infos"),
+          _botao(context),
           _texto(infoResultado),
         ],
       ),
@@ -81,7 +92,7 @@ class _HomeState extends State<Home> {
     return Text(
       textoParaExibir,
       textAlign: TextAlign.center,
-      style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 25.0),
+      style: TextStyle(color: Colors.red, fontSize: 16.0),
     );
   }
 
@@ -94,19 +105,21 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _botao(BuildContext context, String textoBotao) {
-    return RaisedButton(
-        color: Colors.green,
-        child: Text(
-          textoBotao,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
+  _botao(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+      child: Container(
+        height: 50.0,
+        child: RaisedButton(
+          onPressed: () {
+            _open(context);
+          },
+          child: Text("Confirmar",
+              style: TextStyle(color: Colors.white, fontSize: 20.0)),
+          color: Color.fromARGB(255, 0, 141, 47),
         ),
-        onPressed: () {
-          _gerarInfo();
-        });
+      ),
+    );
   }
 
   _dropdownSexo() {
@@ -172,7 +185,7 @@ class _HomeState extends State<Home> {
             });
           },
           activeTrackColor: Colors.lightGreenAccent,
-          activeColor: Color.fromARGB(255, 33, 100, 1),
+          activeColor: Color.fromARGB(255, 79, 148, 0),
         )
       ],
     );
